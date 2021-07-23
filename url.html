@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> QR Code Generator </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="text.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </head>
+
+  <body>
+    <nav>
+      <input type="checkbox" id="check">
+
+      <label for="check" class="checkbtn">
+        <i class="fas fa-bars"></i>
+      </label>
+
+        <label class="logo"> LOGO </label>
+      
+        <ul>
+            <li><a class="active" href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Feedback</a></li>
+        </ul>
+
+    </nav>
+        <Section>
+            
+            <Label>
+                <br>
+                <p>URL
+                <textarea id="value" row="50" col="50">  </textarea>
+            </Label>
+        
+            <label>
+                <br>
+                <p>Size:
+                <input id="size" type="number" value="195">
+            </label>
+        
+            <label>
+                <br>
+                <p>Version:
+                <input id="version" type="number" value="10">
+            </label>
+        
+        <h1>SCAN QR CODE</h1>
+        <div class="group">
+            <div id="qr"></div>
+        </div>
+        
+        <script src="src/qrcode.js"></script>
+        <script src="dist/qart.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                var value= ' ';
+                var version = 10;
+                var imageSize = 75 + (version * 12) - 24;
+                var size = "175";
+            
+    
+                var self = this ;
+    
+                $('#image img').width(imageSize);
+    
+                function makeQR() {
+                    // console.log('Current version:', version)
+                    qrcode.qrcode.stringToBytes = qrcode.qrcode.stringToBytesFuncs['UTF-8']
+                    var qr = qrcode.qrcode(version, 'H');
+                    qr.addData(value);
+                    try {
+                      qr.make();
+    
+                    }catch (err) {
+                      console.log('Version is low:', version)
+                      console.log('Error:', err)
+                    }
+                    document.getElementById('qr').innerHTML = qr.createImgTag(3);
+                }
+    
+                function makeQArt() {
+                    new QArt({
+                        value: value,
+                        imagePath: imagePath,
+                        filter: filter,
+                        version: version,
+                        background: bg,
+                        size: size,
+                        fillType: fillType
+                    }).make(document.getElementById('combine'));
+                }
+    
+                function getBase64(file, callback) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function () {
+                        callback(reader.result);
+                    };
+                }
+    
+                $('#value').keyup(function() {
+                    value = $(this).val();
+                    makeQR();
+                    makeQArt();
+                });
+    
+    
+                $('#size').keyup(function() {
+                    size = $(this).val();
+                    makeQArt();
+                });
+    
+    
+    
+                $('#version').bind('keyup change click', function() {
+                    console.log($('#version').val());
+                    version = $('#version').val();
+                    imageSize = 75 + (version * 12) - 24;
+                    $('#image img').width(imageSize);
+                    makeQR();
+                    makeQArt();
+                });
+    
+                
+    
+                makeQR();
+                makeQArt();
+            });
+        </script>
+
+        </Section>
+        
+  </body>
+</html>
